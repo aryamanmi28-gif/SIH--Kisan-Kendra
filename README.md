@@ -101,11 +101,11 @@ function App() {
 
 | Name | Role | Email |
 | :--- | :--- | :--- |
-| **Aryaman** | Project Lead & Developer | `aryamanmi28@gmail.com` |
+| **Aryaman** ([@aryamanmi28-gif](https://github.com/aryamanmi28-gif)) | Project Lead & Developer | `aryamanmi28@gmail.com` |
+| **Arnav Deshmukh** ([@Arnav979](https://github.com/Arnav979)) | Co-author & Developer | `arnavdeshmukh339@gmail.com` |
 | **Dhruthi Kulkarni** | Co-author & Developer | `kulkarnidhruthi@gmail.com` |
 | **Ayush** | Co-author & Developer | `ayushbtech24@rvu.edu.in` |
 | **Nishchala BR** | Co-author & Developer | `nishchalabr87@gmail.com` |
-| **Arnav Deshmukh** | Co-author & Developer | `arnavdeshmukh339@gmail.com` |
 | **Athreya R** | Co-author & Developer | `athreyar15@gmail.com` |
 
 ---
