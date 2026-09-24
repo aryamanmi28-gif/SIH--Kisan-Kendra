@@ -99,12 +99,14 @@ function App() {
 
 ## 👥 Team & Contributors
 
-- **Aryaman** ([@aryamanmi28-gif](https://github.com/aryamanmi28-gif)) - Project Lead & Developer (`aryamanmi28@gmail.com`)
-- **Dhruthi Kulkarni** (`kulkarnidhruthi@gmail.com`) - Co-author & Contributor
-- **Ayush** (`ayushbtech24@rvu.edu.in`) - Co-author & Contributor
-- **Nishchala BR** (`nishchalabr87@gmail.com`) - Co-author & Contributor
-- **Arnav Deshmukh** (`arnavdeshmukh339@gmail.com`) - Co-author & Contributor
-- **Athreya R** (`athreyar15@gmail.com`) - Co-author & Contributor
+| Name | Role | Email |
+| :--- | :--- | :--- |
+| **Aryaman** | Project Lead & Developer | `aryamanmi28@gmail.com` |
+| **Dhruthi Kulkarni** | Co-author & Developer | `kulkarnidhruthi@gmail.com` |
+| **Ayush** | Co-author & Developer | `ayushbtech24@rvu.edu.in` |
+| **Nishchala BR** | Co-author & Developer | `nishchalabr87@gmail.com` |
+| **Arnav Deshmukh** | Co-author & Developer | `arnavdeshmukh339@gmail.com` |
+| **Athreya R** | Co-author & Developer | `athreyar15@gmail.com` |
 
 ---
 
