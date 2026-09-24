@@ -103,6 +103,8 @@ function App() {
 - **Dhruthi Kulkarni** (`kulkarnidhruthi@gmail.com`) - Co-author & Contributor
 - **Ayush** (`ayushbtech24@rvu.edu.in`) - Co-author & Contributor
 - **Nishchala BR** (`nishchalabr87@gmail.com`) - Co-author & Contributor
+- **Arnav Deshmukh** (`arnavdeshmukh339@gmail.com`) - Co-author & Contributor
+- **Athreya R** (`athreyar15@gmail.com`) - Co-author & Contributor
 
 ---
 
