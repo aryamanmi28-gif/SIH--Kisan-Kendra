@@ -97,6 +97,15 @@ function App() {
 
 ---
 
+## 👥 Team & Contributors
+
+- **Aryaman** ([@aryamanmi28-gif](https://github.com/aryamanmi28-gif)) - Project Lead & Developer (`aryamanmi28@gmail.com`)
+- **Dhruthi Kulkarni** (`kulkarnidhruthi@gmail.com`) - Co-author & Contributor
+- **Ayush** (`ayushbtech24@rvu.edu.in`) - Co-author & Contributor
+- **Nishchala BR** (`nishchalabr87@gmail.com`) - Co-author & Contributor
+
+---
+
 ## 📞 Kisan Helpline Support
 - **Toll-Free Helpline**: 1800-180-1551 (6:00 AM – 9:00 PM)
 - **Official Email**: support@kisankendra.gov.in
