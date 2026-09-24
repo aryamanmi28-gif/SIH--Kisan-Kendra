@@ -9,7 +9,7 @@ A comprehensive, end-to-end digital platform designed for government crop procur
 The project is structured into 3 modular sub-systems:
 
 ```
-SIH--Kisan-Kendra/
+SIH--Kisan-Suvidha/
 ├── 📱 kisan-kendra/    # React + Vite + TailwindCSS Farmer & Officer Web Frontend
 ├── ⚙️ sih-backend/      # Django REST Framework Backend API (JWT Auth, Queue Engine)
 └── 🤖 chat-bot/         # Kisan Sahayak 7-Language AI Assistant & Voice Guide
