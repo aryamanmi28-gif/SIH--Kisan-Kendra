@@ -1,4 +1,4 @@
-# 🌾 Kisan Kendra — Smart Farmer Procurement & Slot Management System
+# 🌾 Kisan Suvidha — Smart Farmer Procurement & Slot Management System
 
 A comprehensive, end-to-end digital platform designed for government crop procurement, mandi queue optimization, multi-language farmer support, and Direct Benefit Transfer (DBT) payment tracking. Built for Smart India Hackathon (SIH) Problem Statement 26032.
 
