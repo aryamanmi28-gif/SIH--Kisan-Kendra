@@ -1,0 +1,30 @@
+# Node / JS
+node_modules/
+dist/
+build/
+.DS_Store
+*.local
+
+# Python / Virtual Envs
+venv/
+win_venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+ENV/
+
+# Environment Variables
+.env
+.env.local
+
+# Database
+db.sqlite3
+
+# IDE / Editors
+.vscode/
+.idea/
+*.swp
+*.swo

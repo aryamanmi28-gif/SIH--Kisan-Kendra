@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#123D28" />
+    <meta
+      name="description"
+      content="Book a procurement slot, get a token, track your place in the queue and follow your payment - Kisan Suvidha crop procurement service."
+    />
+    <script>
+      // Runs before first paint so a farmer who chose dark mode, or whose
+      // phone is in dark mode, never sees a white flash. The same keys are
+      // read by ThemeContext and I18nProvider.
+      ;(function () {
+        var root = document.documentElement
+        try {
+          var theme = JSON.parse(localStorage.getItem('kk.ui.theme'))
+          if (theme !== 'light' && theme !== 'dark') {
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          }
+          root.setAttribute('data-theme', theme)
+          var lang = JSON.parse(localStorage.getItem('kk.ui.language'))
+          if (lang) root.setAttribute('lang', lang)
+        } catch (e) {
+          root.setAttribute('data-theme', 'light')
+        }
+      })()
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Google Fonts serves each script as its own subset, so a phone only
+         downloads the script it actually renders. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Kisan Suvidha - Crop Procurement Slot Booking</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

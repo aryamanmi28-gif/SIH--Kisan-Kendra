@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kisan Sahayak Multi-Language Chatbot - Standalone Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-stone-100 text-stone-900 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-emerald-900 text-white shadow-lg py-6 px-4">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold flex items-center gap-2">
+          🌾 Kisan Sahayak Chatbot Demo
+        </h1>
+        <p class="text-sm text-emerald-200">
+          Multi-Language FAQs, Project Knowledge Base & Guided Farmer Process Assistant
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <label for="langSelect" class="text-xs font-semibold text-emerald-200">Select Language:</label>
+        <select id="langSelect" onchange="switchLanguage(this.value)" class="bg-emerald-950 text-white text-sm font-semibold rounded-lg px-3 py-1.5 border border-emerald-600 focus:outline-none focus:ring-2 focus:ring-amber-400">
+          <option value="en">English (EN)</option>
+          <option value="hi">हिन्दी (HI)</option>
+          <option value="kn">ಕನ್ನಡ (KN)</option>
+          <option value="ta">தமிழ் (TA)</option>
+          <option value="te">తెలుగు (TE)</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto flex-1 p-4 sm:p-6 w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Information Side Panel -->
+    <div class="md:col-span-1 bg-white p-5 rounded-2xl shadow-md border border-stone-200 space-y-4">
+      <h2 class="text-base font-bold text-emerald-900 flex items-center gap-2">
+        ℹ️ Chatbot Features
+      </h2>
+      <ul class="text-xs space-y-2.5 text-stone-700">
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-600 font-bold">✓</span>
+          <span><b>5 Languages Supported:</b> English, Hindi, Kannada, Tamil, Telugu.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-600 font-bold">✓</span>
+          <span><b>Process Guide Wizard:</b> Step-by-step assistance for Registration, Slot Booking, Check-in, Queue & DBT Payments.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-600 font-bold">✓</span>
+          <span><b>Project Knowledge Base:</b> Instant answers on MSP rates, Perishable Paddy Priority, Gate timings & documents.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-emerald-600 font-bold">✓</span>
+          <span><b>Voice Readout Option:</b> Multi-language browser speech synthesis support.</span>
+        </li>
+      </ul>
+
+      <hr class="border-stone-200" />
+
+      <h3 class="text-xs font-bold text-stone-900 uppercase tracking-wider">
+        ⚡ Test Guided Process Steps:
+      </h3>
+      <div id="processGuideContainer" class="flex flex-col gap-2">
+        <!-- Dynamic Process Buttons Inserted Here -->
+      </div>
+    </div>
+
+    <!-- Chat Interactive Window -->
+    <div class="md:col-span-2 flex flex-col bg-white rounded-2xl shadow-xl border border-stone-200 h-[580px] overflow-hidden">
+      <!-- Chat Header -->
+      <div class="bg-gradient-to-r from-emerald-800 to-emerald-900 p-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-emerald-950 flex items-center justify-center text-xl ring-2 ring-amber-400">
+            🌾
+          </div>
+          <div>
+            <h3 id="botTitle" class="font-bold text-base leading-tight">Kisan Sahayak AI Assistant</h3>
+            <p id="botSubtitle" class="text-xs text-emerald-200">24/7 Procurement, Queue & Payment Helper</p>
+          </div>
+        </div>
+        <button onclick="toggleSpeech()" id="speechBtn" class="text-xs font-semibold px-2.5 py-1.5 bg-emerald-950/80 rounded-lg text-emerald-100 hover:bg-emerald-700 transition">
+          🔇 Voice Off
+        </button>
+      </div>
+
+      <!-- Messages Area -->
+      <div id="messagesList" class="flex-1 overflow-y-auto p-4 space-y-4 bg-stone-50">
+        <!-- Messages rendered dynamically -->
+      </div>
+
+      <!-- Suggested Chips -->
+      <div id="suggestionsBar" class="px-4 py-2 bg-emerald-50/60 border-t border-stone-200 flex flex-wrap gap-1.5">
+        <!-- Dynamic suggestion chips -->
+      </div>
+
+      <!-- Input Bar -->
+      <form onsubmit="handleUserSubmit(event)" class="p-3 bg-white border-t border-stone-200 flex items-center gap-2">
+        <input type="text" id="userInput" placeholder="Ask about slot booking, MSP, queue..." class="flex-1 border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20">
+        <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition">
+          Send ➔
+        </button>
+      </form>
+    </div>
+
+  </main>
+
+  <script>
+    const KNOWLEDGE_BASE = {
+      en: {
+        title: "Kisan Sahayak AI Assistant",
+        subtitle: "24/7 Procurement, Queue & Payment Helper",
+        welcome: "Namaste! I am Kisan Sahayak 🌾. How can I help you with crop procurement, slot booking, gate check-in, or payment status?",
+        placeholder: "Ask about slot booking, MSP, queue...",
+        faqs: [
+          { id: "working", q: "How does Kisan Kendra work?", a: "Kisan Kendra simplifies crop procurement in 4 steps:\n1. Book a slot online.\n2. Receive a digital token.\n3. Check-in at the Mandi gate.\n4. Complete weighment & receive direct bank transfer (DBT)." },
+          { id: "booking", q: "How do I book a procurement slot?", a: "Go to Centres, pick a date & morning/afternoon slot, and confirm. Limit: 1 active slot per crop lot per day per farmer." },
+          { id: "priority", q: "What is the Paddy Priority Window?", a: "Paddy, Maize & Groundnut get priority morning slots (6 AM - 10 AM) to prevent spoilage." },
+          { id: "documents", q: "What documents are required?", a: "Keep ready:\n1. Aadhaar Card\n2. Khasra/Khatauni Land Record\n3. Aadhaar-linked Bank Account details\n4. Registered Mobile Number." },
+          { id: "msp", q: "What are the official MSP rates?", a: "Current Government MSP rates per Quintal:\n• Paddy (Common): ₹2,300/qtl\n• Wheat: ₹2,275/qtl\n• Maize: ₹2,225/qtl\n• Soybean: ₹4,892/qtl\n• Cotton: ₹7,121/qtl\n• Gram: ₹5,440/qtl" },
+          { id: "payment", q: "How is payment credited?", a: "Direct Benefit Transfer (DBT) in 4 stages:\n1. Procurement Completed\n2. Payment Initiated\n3. DBT Processing\n4. Payment Credited with UTR Reference Number." }
+        ],
+        steps: {
+          step1: { title: "1️⃣ Registration & Documents", details: "Register mobile number with OTP, link Aadhaar to Bank Account for DBT, and upload Khasra/Khatauni land records." },
+          step2: { title: "2️⃣ Book Procurement Slot", details: "Select nearest Mandi, pick available slot date (6 AM - 10 AM for Paddy priority), and get your digital token slip." },
+          step3: { title: "3️⃣ Mandi Gate Check-in", details: "Show token QR code to gate officer on slot day. Status updates to Checked-in and adds you to the live queue." },
+          step4: { title: "4️⃣ Queue & Counter Weighment", details: "Track live counter token on screen. Quality inspector tests moisture & digital weighbridge prints official MSP slip." },
+          step5: { title: "5️⃣ DBT Direct Payment", details: "Track 4-stage DBT status on Procurement tab until funds are credited with UTR reference number." }
+        }
+      },
+      hi: {
+        title: "किसान सहायक AI मित्र",
+        subtitle: "24/7 उपज खरीद, कतार एवं भुगतान सहायक",
+        welcome: "नमस्ते! मैं किसान सहायक हूँ 🌾। फसल खरीद, स्लॉट बुकिंग, गेट चेक-इन या भुगतान जानकारी में आपकी क्या मदद कर सकता हूँ?",
+        placeholder: "स्लॉट बुकिंग, एमएसपी, टोकन, भुगतान के बारे में पूछें...",
+        faqs: [
+          { id: "working", q: "किसान केंद्र कैसे काम करता है?", a: "किसान केंद्र फसल खरीद को 4 चरणों में पूरा करता है:\n1. ऑनलाइन स्लॉट बुक करें।\n2. डिजिटल टोकन प्राप्त करें।\n3. मंडी गेट पर चेक-इन करें।\n4. तौल पूरी करके सीधे बैंक (DBT) में भुगतान पाएं।" },
+          { id: "booking", q: "फसल खरीद स्लॉट कैसे बुक करें?", a: "केंद्र चुनें, तिथि व सुबह/दोपहर का समय चुनें। नियम: प्रति किसान प्रति दिन 1 स्लॉट।" },
+          { id: "priority", q: "धान की प्राथमिकता विंडो क्या है?", a: "धान, मक्का और मूंगफली को खराब होने से बचाने के लिए सुबह 6 से 10 बजे की प्राथमिकता स्लॉट दी जाती है।" },
+          { id: "documents", q: "कौन से दस्तावेज आवश्यक हैं?", a: "1. आधार कार्ड\n2. खसरा/खतौनी जमीन का पर्चा\n3. आधार से जुड़ा बैंक खाता\n4. पंजीकृत मोबाइल नंबर।" },
+          { id: "msp", q: "एमएसपी (MSP) दरें क्या हैं?", a: "प्रति क्विंटल सरकारी एमएसपी दरें:\n• धान: ₹2,300\n• गेहूं: ₹2,275\n• मक्का: ₹2,225\n• सोयाबीन: ₹4,892\n• कपास: ₹7,121\n• चना: ₹5,440" },
+          { id: "payment", q: "भुगतान कैसे जमा होता है?", a: "DBT के माध्यम से 4 चरणों में:\n1. खरीद पूरी 2. भुगतान शुरू 3. डीबीटी प्रोसेसिंग 4. बैंक खाते में यूटीआर नंबर के साथ जमा।" }
+        ],
+        steps: {
+          step1: { title: "1️⃣ पंजीकरण एवं दस्तावेज", details: "ओटीपी से मोबाइल नंबर दर्ज करें, आधार बैंक खाते से जोड़ें और खसरा/खतौनी कॉपी तैयार रखें।" },
+          step2: { title: "2️⃣ स्लॉट बुकिंग (खरीद केंद्र)", details: "निकटतम मंडी चुनें, उपलब्ध तिथि व सुबह का स्लॉट (6-10 AM) चुनें और टोकन स्लिप प्राप्त करें।" },
+          step3: { title: "3️⃣ मंडी गेट चेक-इन", details: "स्लॉट के दिन गेट कर्मचारी को टोकन क्यूआर कोड दिखाएं। स्टेटस चेक-इन होकर लाइव कतार में जुड़ेगा।" },
+          step4: { title: "4️⃣ लाइव कतार एवं तौल", details: "लाइव कतार बोर्ड पर अपना टोकन नंबर देखें। डिजिटल वे bridge पर तौल करवा कर एमएसपी रसीद प्राप्त करें।" },
+          step5: { title: "5️⃣ DBT बैंक भुगतान स्थिति", details: "खरीद स्थिति पेज पर 4-चरणीय डीबीटी ट्रैकर देखें। पैसा जमा होने पर यूटीआर नंबर प्राप्त करें।" }
+        }
+      }
+    }
+
+    let currentLang = 'en';
+    let isSpeechEnabled = false;
+
+    function getLangData() {
+      return KNOWLEDGE_BASE[currentLang] || KNOWLEDGE_BASE.en;
+    }
+
+    function switchLanguage(lang) {
+      currentLang = lang;
+      const data = getLangData();
+      document.getElementById('botTitle').innerText = data.title;
+      document.getElementById('botSubtitle').innerText = data.subtitle;
+      document.getElementById('userInput').placeholder = data.placeholder;
+      
+      renderProcessGuideButtons();
+      renderWelcomeMessage();
+    }
+
+    function renderProcessGuideButtons() {
+      const data = getLangData();
+      const container = document.getElementById('processGuideContainer');
+      container.innerHTML = '';
+      
+      Object.entries(data.steps).forEach(([key, step]) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left bg-emerald-50 hover:bg-emerald-100 text-emerald-950 text-xs font-semibold px-3 py-2 rounded-xl border border-emerald-200 transition";
+        btn.innerText = step.title;
+        btn.onclick = () => handleStepClick(step);
+        container.appendChild(btn);
+      });
+    }
+
+    function renderWelcomeMessage() {
+      const data = getLangData();
+      const list = document.getElementById('messagesList');
+      list.innerHTML = `
+        <div class="flex flex-col items-start">
+          <div class="bg-white border border-stone-200 text-stone-800 rounded-2xl rounded-bl-none px-4 py-3 text-sm shadow-xs max-w-[85%] whitespace-pre-line">
+            ${data.welcome}
+          </div>
+        </div>
+      `;
+      renderSuggestions();
+    }
+
+    function renderSuggestions() {
+      const data = getLangData();
+      const bar = document.getElementById('suggestionsBar');
+      bar.innerHTML = '<span class="text-xs font-bold text-emerald-900 w-full mb-1">Recommended Questions:</span>';
+      data.faqs.forEach(faq => {
+        const chip = document.createElement('button');
+        chip.className = "bg-white border border-emerald-300 text-emerald-900 text-xs font-medium px-3 py-1 rounded-full hover:bg-emerald-100 transition shadow-2xs";
+        chip.innerText = '❓ ' + faq.q;
+        chip.onclick = () => handleFaqClick(faq);
+        bar.appendChild(chip);
+      });
+    }
+
+    function addMessage(sender, text) {
+      const list = document.getElementById('messagesList');
+      const div = document.createElement('div');
+      div.className = `flex flex-col ${sender === 'user' ? 'items-end' : 'items-start'}`;
+      
+      const inner = document.createElement('div');
+      inner.className = sender === 'user' 
+        ? 'bg-emerald-700 text-white rounded-2xl rounded-br-none px-4 py-2.5 text-sm shadow-xs max-w-[85%] whitespace-pre-line'
+        : 'bg-white border border-stone-200 text-stone-800 rounded-2xl rounded-bl-none px-4 py-2.5 text-sm shadow-xs max-w-[85%] whitespace-pre-line';
+      inner.innerText = text;
+      
+      div.appendChild(inner);
+      list.appendChild(div);
+      list.scrollTop = list.scrollHeight;
+
+      if (sender === 'bot' && isSpeechEnabled && ('speechSynthesis' in window)) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text.replace(/[📌1️⃣2️⃣3️⃣4️⃣5️⃣]/g, ''));
+        u.lang = currentLang === 'hi' ? 'hi-IN' : 'en-IN';
+        window.speechSynthesis.speak(u);
+      }
+    }
+
+    function handleStepClick(step) {
+      addMessage('user', step.title);
+      setTimeout(() => {
+        addMessage('bot', step.title + '\n\n' + step.details);
+      }, 300);
+    }
+
+    function handleFaqClick(faq) {
+      addMessage('user', faq.q);
+      setTimeout(() => {
+        addMessage('bot', faq.a);
+      }, 300);
+    }
+
+    function handleUserSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('userInput');
+      const val = input.value.trim();
+      if (!val) return;
+      
+      addMessage('user', val);
+      input.value = '';
+
+      setTimeout(() => {
+        const data = getLangData();
+        const matched = data.faqs.find(f => f.q.toLowerCase().includes(val.toLowerCase()) || val.toLowerCase().includes(f.id));
+        if (matched) {
+          addMessage('bot', matched.a);
+        } else {
+          addMessage('bot', "I have noted your request regarding: '" + val + "'. Please check the Process Guide on the left or select one of the suggested FAQs!");
+        }
+      }, 400);
+    }
+
+    function toggleSpeech() {
+      isSpeechEnabled = !isSpeechEnabled;
+      document.getElementById('speechBtn').innerText = isSpeechEnabled ? '🔊 Voice On' : '🔇 Voice Off';
+    }
+
+    // Init
+    switchLanguage('en');
+  </script>
+</body>
+</html>

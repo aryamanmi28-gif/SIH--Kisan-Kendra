@@ -1,0 +1,341 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* Colour tokens. Values are "R G B" so Tailwind opacity modifiers work. */
+/* Light is the default; dark lives inside @media screen so a printed    */
+/* token slip always comes out black on white.                           */
+/* ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --c-surface: 255 255 255;
+  --c-paper: 244 246 243;
+  --c-line: 217 222 216;
+  --c-ink: 22 36 28;
+  --c-muted: 88 102 96;
+
+  --c-brand-50: 238 245 240;
+  --c-brand-100: 215 232 221;
+  --c-brand-200: 175 209 188;
+  --c-brand-300: 127 179 150;
+  --c-brand-400: 78 149 115;
+  --c-brand-500: 46 125 83;
+  --c-brand-600: 31 102 66;
+  --c-brand-700: 23 80 52;
+  --c-brand-800: 18 61 40;
+  --c-brand-900: 13 44 29;
+  --c-brand-hover: 23 80 52;
+
+  --c-forest-800: 18 61 40;
+  --c-forest-900: 13 44 29;
+
+  --c-grain-50: 253 247 232;
+  --c-grain-100: 248 233 194;
+  --c-grain-200: 239 212 140;
+  --c-grain-500: 180 123 16;
+  --c-grain-600: 142 95 7;
+  --c-grain-700: 107 71 5;
+
+  --c-steel-50: 237 243 250;
+  --c-steel-100: 211 227 245;
+  --c-steel-500: 27 94 158;
+  --c-steel-600: 21 75 126;
+
+  --c-danger-50: 252 237 236;
+  --c-danger-100: 247 214 211;
+  --c-danger-500: 179 38 30;
+  --c-danger-600: 143 30 23;
+  --c-danger-hover: 143 30 23;
+}
+
+/* Dark: the mandi yard after sunset. Green-black ground, not neutral grey,
+   so the product keeps its field colour at night. Every text pair here was
+   checked at WCAG AA or better. */
+@media screen {
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --c-surface: 21 31 25;
+    --c-paper: 14 21 17;
+    --c-line: 44 58 49;
+    --c-ink: 228 236 230;
+    --c-muted: 157 176 165;
+
+    --c-brand-50: 19 41 28;
+    --c-brand-100: 24 52 34;
+    --c-brand-200: 38 82 58;
+    --c-brand-300: 58 115 85;
+    --c-brand-400: 84 154 116;
+    --c-brand-500: 108 180 140;
+    --c-brand-600: 43 132 84;
+    --c-brand-700: 143 212 173;
+    --c-brand-800: 183 230 203;
+    --c-brand-900: 216 242 227;
+    --c-brand-hover: 35 113 74;
+
+    --c-forest-800: 15 49 33;
+    --c-forest-900: 10 34 23;
+
+    --c-grain-50: 42 32 13;
+    --c-grain-100: 58 44 16;
+    --c-grain-200: 92 69 22;
+    --c-grain-500: 224 164 58;
+    --c-grain-600: 235 180 90;
+    --c-grain-700: 242 200 120;
+
+    --c-steel-50: 18 33 58;
+    --c-steel-100: 27 50 82;
+    --c-steel-500: 91 156 224;
+    --c-steel-600: 147 192 238;
+
+    --c-danger-50: 47 20 22;
+    --c-danger-100: 74 30 33;
+    --c-danger-500: 209 70 62;
+    --c-danger-600: 242 154 147;
+    --c-danger-hover: 178 58 51;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink antialiased;
+    font-family: theme('fontFamily.sans');
+  }
+
+  /* Numbers carry most of the meaning in this product: token, quintals,
+     rupees, minutes. Keep them aligned everywhere. */
+  input,
+  td,
+  th {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 3px solid rgb(var(--c-grain-500));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-semibold tracking-tight;
+    text-wrap: balance;
+  }
+
+  /* Keep body copy inside a comfortable measure. */
+  p {
+    max-width: 68ch;
+  }
+
+  /* Tamil, Kannada and Telugu sit taller than Latin at the same size;
+     a touch more leading keeps stacked lines from colliding. */
+  html:is([lang='ta'], [lang='kn'], [lang='te']) body {
+    line-height: 1.6;
+  }
+}
+
+@layer components {
+  html:not([lang='en']) .hero-title {
+    max-width: 26ch;
+  }
+  .skip-link {
+    @apply sr-only;
+  }
+  .skip-link:focus {
+    @apply not-sr-only fixed left-3 top-3 z-50 bg-surface px-4 py-2 font-semibold text-brand-800 shadow-lg;
+  }
+}
+
+@layer utilities {
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Page transition: the field wipe.                                     */
+/* The new page sweeps in behind a slanted edge, the way a harvester    */
+/* crosses a field, while the old one falls back and dims. Direction    */
+/* follows navigation: forward sweeps left to right, Back sweeps right  */
+/* to left. The masthead and bottom bar stay put, so only the part of   */
+/* the screen that changed moves.                                       */
+/* ------------------------------------------------------------------ */
+.vt-masthead {
+  view-transition-name: masthead;
+}
+.vt-bottomnav {
+  view-transition-name: bottomnav;
+}
+.vt-toasts {
+  view-transition-name: toasts;
+}
+
+html.vt-page::view-transition-old(root),
+html.vt-page::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+html.vt-page::view-transition-old(root) {
+  animation: 340ms cubic-bezier(0.4, 0, 1, 1) both vt-page-out;
+}
+html.vt-page::view-transition-new(root) {
+  animation: 640ms cubic-bezier(0.16, 1, 0.3, 1) both vt-page-in;
+}
+html.vt-page[data-nav-dir='back']::view-transition-old(root) {
+  animation-name: vt-page-out-back;
+}
+html.vt-page[data-nav-dir='back']::view-transition-new(root) {
+  animation-name: vt-page-in-back;
+}
+html.vt-page::view-transition-group(masthead),
+html.vt-page::view-transition-group(bottomnav) {
+  animation-duration: 300ms;
+}
+
+@keyframes vt-page-out {
+  to {
+    opacity: 0.3;
+    transform: translateX(-4%) scale(0.985);
+  }
+}
+@keyframes vt-page-out-back {
+  to {
+    opacity: 0.3;
+    transform: translateX(4%) scale(0.985);
+  }
+}
+@keyframes vt-page-in {
+  from {
+    clip-path: polygon(0 0, 0 0, -18% 100%, -18% 100%);
+    transform: translateX(56px);
+  }
+  to {
+    clip-path: polygon(0 0, 118% 0, 100% 100%, -18% 100%);
+    transform: none;
+  }
+}
+@keyframes vt-page-in-back {
+  from {
+    clip-path: polygon(118% 0, 118% 0, 100% 100%, 100% 100%);
+    transform: translateX(-56px);
+  }
+  to {
+    clip-path: polygon(0 0, 118% 0, 100% 100%, -18% 100%);
+    transform: none;
+  }
+}
+
+/* Theme switch: the new theme spreads out in a circle from the switch
+   itself (radius and origin are set from JS). Nothing else moves. */
+html.vt-theme .vt-masthead,
+html.vt-theme .vt-bottomnav,
+html.vt-theme .vt-toasts,
+html.vt-lang .vt-masthead,
+html.vt-lang .vt-bottomnav,
+html.vt-lang .vt-toasts {
+  view-transition-name: none;
+}
+html.vt-theme::view-transition-old(root),
+html.vt-theme::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Language switch: a short cross-fade with a lift, so the change reads as
+   the same page in new words rather than a new page. */
+html.vt-lang::view-transition-old(root) {
+  animation: 160ms ease-in both vt-fade-out;
+}
+html.vt-lang::view-transition-new(root) {
+  animation: 300ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both vt-lift-in;
+}
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-lift-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Browsers without View Transitions still get an entrance, just a quieter
+   one: the new page rises into place. */
+@supports not (view-transition-name: none) {
+  .page-enter {
+    animation: page-enter 420ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* Language chooser: the greeting cycles through the five scripts. */
+.lang-cycle-word {
+  animation: lang-cycle 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes lang-cycle {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+}
+.lang-gate-enter {
+  animation: lang-gate-in 360ms ease-out both;
+}
+.lang-gate-leave {
+  animation: lang-gate-out 420ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+@keyframes lang-gate-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes lang-gate-out {
+  to {
+    opacity: 0;
+    transform: translateY(-3%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* The token slip is a physical document at the mandi gate. */
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  .print-slip {
+    border: 2px solid #000 !important;
+    break-inside: avoid;
+  }
+}
