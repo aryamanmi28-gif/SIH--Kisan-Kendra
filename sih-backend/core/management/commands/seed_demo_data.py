@@ -22,7 +22,7 @@ be bookable, not full of queue state.
 """
 
 import random
-from datetime import date, datetime, time as dtime, timedelta
+from datetime import datetime, time as dtime, timedelta
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
@@ -213,7 +213,7 @@ class Command(BaseCommand):
 
     def _create_slots(self, centres):
         slots_by_centre = {}
-        today = date.today()
+        today = timezone.localdate()
         for centre in centres:
             centre_slots = []
             for day_offset in range(TOTAL_DAYS):
@@ -311,7 +311,7 @@ class Command(BaseCommand):
           Slot 1 (10:00-12:00, in progress):         2x SERVED, 1x SERVING, 1x CALLED, 1x WAITING.
           Slot 2 (14:00-16:00, not started yet):     2x WAITING (early check-ins), 3x BOOKED (demo candidates).
         """
-        today = date.today()
+        today = timezone.localdate()
         report = {}
 
         for centre in centres:
@@ -376,7 +376,7 @@ class Command(BaseCommand):
     # -- future days: light, un-simulated booking density ----------------
 
     def _seed_future_days(self, centres, slots_by_centre, farmers):
-        today = date.today()
+        today = timezone.localdate()
         count = 0
         for centre in centres:
             future_slots = [s for s in slots_by_centre[centre.code] if s.date != today]

@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 from django.db import transaction
 from django.db.models import F
@@ -77,18 +77,18 @@ class ProcurementCentreViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     def queue(self, request, pk=None):
         centre = self.get_object()
         entries = QueueEntry.objects.filter(
-            booking__slot__centre=centre, booking__slot__date=date.today()
+            booking__slot__centre=centre, booking__slot__date=timezone.localdate()
         ).select_related('booking__farmer', 'booking__slot__centre').order_by('token_number')
         return Response(QueueEntryOfficerSerializer(entries, many=True).data)
 
     @action(detail=True, methods=['get'], url_path='daily-summary', permission_classes=[IsOfficerUser])
     def daily_summary(self, request, pk=None):
         centre = self.get_object()
-        # Same date() call check_in uses, so the two views never disagree
-        # about what "today" is.
+        # Same timezone.localdate() call check_in uses, so the two views
+        # never disagree about what "today" is.
         bookings = Booking.objects.filter(
             slot__centre=centre,
-            slot__date=date.today(),
+            slot__date=timezone.localdate(),
         ).exclude(status=Booking.CANCELLED).select_related(
             'farmer', 'slot', 'slot__centre', 'queue_entry',
         ).order_by(
@@ -103,7 +103,7 @@ class ProcurementCentreViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
         centre = self.get_object()
         with transaction.atomic():
             entry = QueueEntry.objects.select_for_update().filter(
-                booking__slot__centre=centre, booking__slot__date=date.today(), status=QueueEntry.WAITING,
+                booking__slot__centre=centre, booking__slot__date=timezone.localdate(), status=QueueEntry.WAITING,
             ).order_by('token_number').first()
             if entry is None:
                 return Response({'detail': 'No farmers waiting in the queue.'})
@@ -167,7 +167,7 @@ class BookingViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Retr
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        today = date.today()
+        today = timezone.localdate()
         slot_date = booking.slot.date
         if slot_date > today:
             return Response(
@@ -206,7 +206,7 @@ class BookingViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Retr
             )
 
         slot = booking.slot
-        today = date.today()
+        today = timezone.localdate()
         if slot.date <= today:
             return Response(
                 {'detail': 'Emergency requests are only available for future bookings.'},
